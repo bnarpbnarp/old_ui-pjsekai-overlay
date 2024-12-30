@@ -32,12 +32,12 @@ func FetchChart(source Source, chartId string) (sonolus.LevelInfo, error) {
 	resp, err := http.Get(url)
 
 	if err != nil {
-		return sonolus.LevelInfo{}, errors.New("サーバーに接続できませんでした。")
+		return sonolus.LevelInfo{}, errors.New("Could not connect to server.")
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return sonolus.LevelInfo{}, errors.New("譜面が見つかりませんでした。")
+		return sonolus.LevelInfo{}, errors.New("Unable to find chart.")
 	}
 
 	var chart sonolus.InfoResponse[sonolus.LevelInfo]
@@ -48,14 +48,7 @@ func FetchChart(source Source, chartId string) (sonolus.LevelInfo, error) {
 
 func DetectChartSource(chartId string) (Source, error) {
 	var source Source
-	if strings.HasPrefix(chartId, "ptlv-") {
-		source = Source{
-			Id:    "potato_leaves",
-			Name:  "Potato Leaves",
-			Color: 0x88cb7f,
-			Host:  "ptlv.sevenc7c.com",
-		}
-	} else if strings.HasPrefix(chartId, "chcy-") {
+	if strings.HasPrefix(chartId, "chcy-") {
 		source = Source{
 			Id:    "chart_cyanvas",
 			Name:  "Chart Cyanvas",
@@ -78,30 +71,30 @@ func FetchLevelData(source Source, level sonolus.LevelInfo) (sonolus.LevelData, 
 	url, err := sonolus.JoinUrl("https://"+source.Host, level.Data.Url)
 
 	if err != nil {
-		return sonolus.LevelData{}, fmt.Errorf("URLの解析に失敗しました。（%s）", err)
+		return sonolus.LevelData{}, fmt.Errorf("URL parsing failed. （%s）", err)
 	}
 
 	resp, err := http.Get(url)
 
 	if err != nil {
-		return sonolus.LevelData{}, fmt.Errorf("サーバーに接続できませんでした。（%s）", err)
+		return sonolus.LevelData{}, fmt.Errorf("Could not connect to server. （%s）", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return sonolus.LevelData{}, fmt.Errorf("譜面データが見つかりませんでした。（%d）", resp.StatusCode)
+		return sonolus.LevelData{}, fmt.Errorf("No chart data found. （%d）", resp.StatusCode)
 	}
 
 	var data sonolus.LevelData
 	gzipReader, err := gzip.NewReader(resp.Body)
 	if err != nil {
-		return sonolus.LevelData{}, fmt.Errorf("譜面データの読み込みに失敗しました。（%s）", err)
+		return sonolus.LevelData{}, fmt.Errorf("Loading chart data failed. （%s）", err)
 	}
 
 	err = json.NewDecoder(gzipReader).Decode(&data)
 
 	if err != nil {
-		return sonolus.LevelData{}, fmt.Errorf("譜面データの読み込みに失敗しました。（%s）", err)
+		return sonolus.LevelData{}, fmt.Errorf("Loading chart data failed. （%s）", err)
 	}
 
 	return data, nil
@@ -111,19 +104,19 @@ func DownloadCover(source Source, level sonolus.LevelInfo, destPath string) erro
 	url, err := sonolus.JoinUrl("https://"+source.Host, level.Cover.Url)
 
 	if err != nil {
-		return fmt.Errorf("URLの解析に失敗しました。（%s）", err)
+		return fmt.Errorf("URL parsing failed. （%s）", err)
 	}
 
 	resp, err := http.Get(url)
 
 	if err != nil {
-		return fmt.Errorf("サーバーに接続できませんでした。（%s）", err)
+		return fmt.Errorf("Could not connect to server. （%s）", err)
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("ジャケットが見つかりませんでした。（%d）", resp.StatusCode)
+		return fmt.Errorf("Loading jacket failed. （%d）", resp.StatusCode)
 	}
 
 	os.MkdirAll(destPath, 0755)
@@ -142,7 +135,7 @@ func DownloadCover(source Source, level sonolus.LevelInfo, destPath string) erro
 	file, err := os.Create(path.Join(destPath, "cover.png"))
 
 	if err != nil {
-		return fmt.Errorf("ファイルの作成に失敗しました。（%s）", err)
+		return fmt.Errorf("Failed to create file. （%s）", err)
 	}
 
 	defer file.Close()
@@ -150,7 +143,7 @@ func DownloadCover(source Source, level sonolus.LevelInfo, destPath string) erro
 	err = png.Encode(file, newImage)
 
 	if err != nil {
-		return fmt.Errorf("ファイルの書き込みに失敗しました。（%s）", err)
+		return fmt.Errorf("Failed to write file. （%s）", err)
 	}
 
 	return nil
@@ -158,24 +151,28 @@ func DownloadCover(source Source, level sonolus.LevelInfo, destPath string) erro
 func DownloadBackground(source Source, level sonolus.LevelInfo, destPath string) error {
 	var backgroundUrl string
 	var err error
-	backgroundUrl, err = sonolus.JoinUrl("https://"+source.Host, level.UseBackground.Item.Image.Url)
+	if source.Id == "sweetpotato" {
+		backgroundUrl = fmt.Sprintf("https://image-gen.sevenc7c.com/generate/%s", level.Name)
+	} else {
+		backgroundUrl, err = sonolus.JoinUrl("https://"+source.Host, level.UseBackground.Item.Image.Url)
+	}
 
 	resp, err := http.Get(backgroundUrl)
 
 	if err != nil {
-		return fmt.Errorf("サーバーに接続できませんでした。（%s）", err)
+		return fmt.Errorf("Could not connect to server. （%s）", err)
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("背景が見つかりませんでした。（%d）", resp.StatusCode)
+		return fmt.Errorf("Background not found. （%d）", resp.StatusCode)
 	}
 
 	file, err := os.Create(path.Join(destPath, "background.png"))
 
 	if err != nil {
-		return fmt.Errorf("ファイルの作成に失敗しました。（%s）", err)
+		return fmt.Errorf("Failed to create file. （%s）", err)
 	}
 
 	defer file.Close()
@@ -183,7 +180,7 @@ func DownloadBackground(source Source, level sonolus.LevelInfo, destPath string)
 	io.Copy(file, resp.Body)
 
 	if err != nil {
-		return fmt.Errorf("ファイルの書き込みに失敗しました。（%s）", err)
+		return fmt.Errorf("Failed to write file. （%s）", err)
 	}
 
 	return nil
