@@ -42,11 +42,11 @@ var WEIGHT_MAP = map[string]float64{
 	"NormalSlideEndFlickNote":   1,
 	"CriticalSlideEndFlickNote": 3,
 
-	"HiddenSlideTickNote":   0,
+	"IgnoredSlideTickNote":  0,
 	"NormalSlideTickNote":   0.1,
 	"CriticalSlideTickNote": 0.1,
 
-	"IgnoredSlideTickNote":          0.1,
+	"HiddenSlideTickNote":           0.1,
 	"NormalAttachedSlideTickNote":   0.1,
 	"CriticalAttachedSlideTickNote": 0.1,
 
@@ -65,7 +65,7 @@ var WEIGHT_MAP = map[string]float64{
 	"CriticalSlotGlowEffect": 0,
 
 	"NormalTraceNote":   0.1,
-	"CriticalTraceNote": 0.1,
+	"CriticalTraceNote": 0.2,
 
 	"NormalTraceSlotEffect":     0,
 	"NormalTraceSlotGlowEffect": 0,
@@ -78,10 +78,8 @@ var WEIGHT_MAP = map[string]float64{
 	"CriticalTraceFlickNote":       0.5,
 	"NonDirectionalTraceFlickNote": 0.5,
 
-	"NormalTraceSlideStartNote":   0.1,
-	"NormalTraceSlideEndNote":     0.1,
-	"CriticalTraceSlideStartNote": 0.1,
-	"CriticalTraceSlideEndNote":   0.1,
+	"TraceSlideStartNote": 0.2,
+	"TraceSlideEndNote":   0.2,
 
 	"TimeScaleGroup":  0,
 	"TimeScaleChange": 0,
@@ -160,9 +158,6 @@ func CalculateScore(levelInfo sonolus.LevelInfo, levelData sonolus.LevelData, po
 	sort.SliceStable(noteEntities, func(i, j int) bool {
 		return noteEntities[i].Data[0].Value < noteEntities[j].Data[0].Value
 	})
-	sort.SliceStable(bpmChanges, func(i, j int) bool {
-		return bpmChanges[i].Beat < bpmChanges[j].Beat
-	})
 	for _, entity := range noteEntities {
 		weight := WEIGHT_MAP[entity.Archetype]
 		entityCounter += 1
@@ -209,31 +204,29 @@ func WritePedFile(frames []PedFrame, assets string, ap bool, path string) error 
 		frameScore := score - lastScore
 		lastScore = frame.Score
 
-		// 161, 215, 267, 320, 357
-
 		rank := "n"
 		scoreX := 0.0
 		if score >= 1300000 {
 			rank = "s"
-			scoreX = 357
+			scoreX = 1.0
 		} else if score >= 1165000 {
 			rank = "s"
-			scoreX = float64((score-1165000))/(1300000-1165000)*37 + 320
+			scoreX = float64((score-1165000))/(1300000-1165000)*0.110 + 0.890
 		} else if score >= 940000 {
 			rank = "a"
-			scoreX = float64((score-940000))/(1165000-940000)*53 + 267
+			scoreX = float64((score-940000))/(1165000-940000)*0.148 + 0.742
 		} else if score >= 434000 {
 			rank = "b"
-			scoreX = float64((score-434000))/(940000-434000)*53 + 215
+			scoreX = float64((score-434000))/(940000-434000)*0.151 + 0.591
 		} else if score >= 21500 {
 			rank = "c"
-			scoreX = float64((score-21500))/(434000-21500)*54 + 161
+			scoreX = float64((score-21500))/(434000-21500)*0.144 + 0.447
 		} else if score >= 0 {
-			rank = "d"
-			scoreX = float64(score) / 21500 * 160
+			rank = "n"
+			scoreX = float64(score) / 21500 * 0.447
 		}
 
-		writer.Write([]byte(fmt.Sprintf("s|%f:%d:%d:%f:%s:%d\n", frame.Time, score, frameScore, scoreX/357, rank, i)))
+		writer.Write([]byte(fmt.Sprintf("s|%f:%d:%d:%f:%s:%d\n", frame.Time, score, frameScore, scoreX, rank, i)))
 	}
 
 	return nil
