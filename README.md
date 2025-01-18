@@ -1,8 +1,8 @@
 # pjsekai-overlay / プロセカ風動画作成補助ツール
 
-# > [!READ!]
+# > [!READ!] <
 > **if help needed..**\
-> if u like. need help with setting this up uhh, message me on dc yeaa bnarp_alt\
+> if u like. need help with setting this up uhh, message me on dc yeaa bnarp_alt
 
 normal thing u put in description
 ```
@@ -17,5 +17,5 @@ Pjsekai-overlay tool:
   https://github.com/sevenc-nanashi/pjsekai-overlay
   Original by: 名無し｡ (nanashi) (https://sevenc7c.com)
   https://github.com/bnarpbnarp/old_ui-pjsekai-overlay
-  Modified by: bnarpbnarp
+  Fixed by: bnarpbnarp
 ```
