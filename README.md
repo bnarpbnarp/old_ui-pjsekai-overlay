@@ -1,7 +1,7 @@
 # pjsekai-overlay / プロセカ風動画作成補助ツール
 
 # > [!READ!] <
->                           **if help needed..**\
+                            **if help needed..**\
 > if u like. need help with setting this up uhh, message me on dc yeaa bnarp_alt
 
 normal thing u put in description
