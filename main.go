@@ -66,7 +66,7 @@ func origMain(isOptionSpecified bool) {
 		fmt.Println(color.RedString(fmt.Sprintf("Failed!: %s", err.Error())))
 		return
 	}
-	if chart.Engine.Version != 12 {
+	if chart.Engine.Version != 13 {
 		fmt.Println(color.RedString(fmt.Sprintf("Failed!: This engine is not supported. （version: %d）", chart.Engine.Version)))
 		return
 	}
@@ -96,7 +96,7 @@ func origMain(isOptionSpecified bool) {
 	}
 
 	formattedOutDir := filepath.Join(cwd, strings.Replace(outDir, "_chartId_", chartId, -1))
-	fmt.Printf("chart path here idit: %s\n", color.CyanString(filepath.Dir(formattedOutDir)))
+	fmt.Printf("chart path here: %s\n", color.CyanString(filepath.Dir(formattedOutDir)))
 
 	fmt.Print("Downloading song image.. ")
 	err = pjsekaioverlay.DownloadCover(chartSource, chart, formattedOutDir)
@@ -107,7 +107,7 @@ func origMain(isOptionSpecified bool) {
 
 	fmt.Println(color.GreenString("Done"))
 
-	fmt.Print("Downloading background.. (sadly you are going to have to get the v1 background yourself)")
+	fmt.Print("Downloading background.. (Acquire the v1 background yourself)")
 	err = pjsekaioverlay.DownloadBackground(chartSource, chart, formattedOutDir)
 	if err != nil {
 		fmt.Println(color.RedString(fmt.Sprintf("Failed!: %s", err.Error())))
