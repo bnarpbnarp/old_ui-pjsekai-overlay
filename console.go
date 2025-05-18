@@ -12,10 +12,10 @@ func Title() {
 	fmt.Printf(
 		strings.TrimSpace(dedent.Dedent(`
       %s------------------------------- pjsekai-overlay -------------------------------%s
-        %sold pjsekai-overlay i think%s
+        %sOld PJsekai-Overlay%s
         Version: %s%s%s (based on version %s%s%s)
         Original developed by %s名無し｡(@sevenc-nanashi)%s
-        old version fixed by %sbnarpbnarp%s
+        Old version fix by %sbnarpbnarp%s
         https://github.com/sevenc-nanashi/pjsekai-overlay
       %s-------------------------------------------------------------------------------%s
     `)) + "\n\n",
