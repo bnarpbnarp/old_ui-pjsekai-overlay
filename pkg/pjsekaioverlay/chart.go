@@ -123,7 +123,7 @@ func DownloadCover(source Source, level sonolus.LevelInfo, destPath string) erro
 	imageData, _, err := image.Decode(resp.Body)
 
 	if err != nil {
-		return fmt.Errorf("ジャケットの読み込みに失敗しました。（%s）", err)
+		return fmt.Errorf("Failed to download cover.（%s）", err)
 	}
 
 	// 画像のリサイズ
