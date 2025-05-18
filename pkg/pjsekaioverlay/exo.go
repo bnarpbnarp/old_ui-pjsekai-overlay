@@ -47,12 +47,12 @@ func WriteExoFiles(assets string, destDir string) error {
 		encodedExo, err := io.ReadAll(transform.NewReader(
 			strings.NewReader(replacedExo), japanese.ShiftJIS.NewEncoder()))
     if err != nil {
-      return fmt.Errorf("エンコードに失敗しました（%w）", err)
+      return fmt.Errorf("Encoding failed（%w）", err)
     }
 		if err := os.WriteFile(filepath.Join(destDir, filename),
 			encodedExo,
 			0644); err != nil {
-			return fmt.Errorf("ファイルの書き込みに失敗しました（%w）", err)
+			return fmt.Errorf("Failed to write file（%w）", err)
 		}
 
 	}
