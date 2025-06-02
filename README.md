@@ -1,21 +1,21 @@
 # pjsekai-overlay / プロセカ風動画作成補助ツール
 
-# > [!READ!] <
-**if help needed..**        
-> if u like. need help with setting this up uhh, message me on dc yeaa bnarp_alt
+# !READ!
+**If help is required...**        
+> Uhh like if you need help with anything just wait patiently until I figure out whether to make a wiki or not
 
-normal thing u put in description:
+Normal credits description text:
 ```
 プロセカ風動画作成補助ツール：
   https://github.com/sevenc-nanashi/pjsekai-overlay
   作成：名無し｡ （ https://sevenc7c.com ）
 ```
 
-other thing u can put instead of the normal in description:
+Updated credits description text:
 ```
 Pjsekai-overlay tool:
   https://github.com/sevenc-nanashi/pjsekai-overlay
   Original by: 名無し｡ (nanashi) (https://sevenc7c.com)
   https://github.com/bnarpbnarp/old_ui-pjsekai-overlay
-  Fixed by: bnarpbnarp
+  Fix by: bnarpbnarp
 ```
